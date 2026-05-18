@@ -4,9 +4,14 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+xsd-parser-types = { version = "0.2.1", features = ["quick-xml"] }
 
 [build-dependencies]
 xsd-parser = "1.5.2"
 
 [features]
+serde = [
+  "xsd-parser-types/serde",
+  "xsd-parser/serde",
+]
 generate = []
