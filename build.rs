@@ -7,7 +7,9 @@ use std::{
 #[cfg(feature = "generate")]
 use xsd_parser::{
     Config,
-    config::{GeneratorFlags, InterpreterFlags, OptimizerFlags, ParserFlags, Schema},
+    config::{
+        GeneratorFlags, InterpreterFlags, OptimizerFlags, ParserFlags, Schema, SerdeXmlRsVersion,
+    },
     models::ExplicitNaming,
 };
 
@@ -18,7 +20,6 @@ fn main() {
 
 #[cfg(feature = "generate")]
 fn build_schema_file() {
-
     let cargo_manifest_dir: PathBuf = std::env::var("CARGO_MANIFEST_DIR").unwrap().into();
     let xsd_dir = cargo_manifest_dir.join("xsd");
     let out_dir: PathBuf = std::env::var("OUT_DIR").unwrap().into();
@@ -73,9 +74,20 @@ fn build_schema_file() {
                 ^ GeneratorFlags::ADVANCED_ENUMS,
         )
         .with_naming(ExplicitNaming::default())
-        .with_interpreter_flags(InterpreterFlags::all() ^ InterpreterFlags::WITH_NUM_BIG_INT)
+        .with_interpreter_flags(
+            InterpreterFlags::all()
+                ^ InterpreterFlags::WITH_NUM_BIG_INT
+                ^ InterpreterFlags::WITH_XS_ANY_TYPE
+                ^ InterpreterFlags::WITH_XS_ANY_SIMPLE_TYPE,
+        )
         .with_parser_flags(ParserFlags::all())
-        .with_optimizer_flags(OptimizerFlags::all() ^ OptimizerFlags::FLATTEN_COMPLEX_TYPES)
+        .with_optimizer_flags(
+            OptimizerFlags::all()
+                // ^ OptimizerFlags::FLATTEN_COMPLEX_TYPES
+                ^ OptimizerFlags::REPLACE_XS_ANY_TYPE_WITH_ANY_ELEMENT,
+        )
+        // .with_derive(["serde::Serialize", "serde::Deserialize", "Debug"])
+        // .with_serde_quick_xml()
         .with_quick_xml();
     let code = xsd_parser::generate(config).expect("Could not generate schemas");
     let code = code.to_string();

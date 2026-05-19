@@ -320,6 +320,7 @@ dependencies = [
 name = "quickbooks-xsd"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "xsd-parser",
  "xsd-parser-types",
 ]
@@ -580,7 +581,6 @@ dependencies = [
  "indexmap",
  "quick-xml",
  "regex",
- "serde",
  "thiserror",
 ]
 

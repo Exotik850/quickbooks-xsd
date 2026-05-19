@@ -6,6 +6,10 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(nonstandard_style)]
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
+pub use xsd_parser_types as types;
 
 #[cfg(feature = "generate")]
 include!(concat!(env!("OUT_DIR"), "/schemas.rs"));
