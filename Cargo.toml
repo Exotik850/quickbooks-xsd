@@ -1,6 +1,6 @@
 [package]
 name = "quickbooks-xsd"
-version = "0.1.0"
+version = "0.75.0"
 edition = "2024"
 
 [dependencies]
@@ -8,6 +8,8 @@ serde = { version = "1.0", features = ["derive"] }
 xsd-parser-types = { version = "0.2", features = ["quick-xml"] }
 
 [build-dependencies]
+zip = "8.6"
+ureq = "3.3"
 xsd-parser = { version = "1.5", features = ["serde"] }
 
 [features]

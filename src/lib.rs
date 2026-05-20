@@ -11,8 +11,5 @@
 
 pub use xsd_parser_types as types;
 
-#[cfg(feature = "generate")]
-include!(concat!(env!("OUT_DIR"), "/schemas.rs"));
-
-#[cfg(not(feature = "generate"))]
-include!("schemas.rs");
+mod schemas;
+pub use schemas::*;
