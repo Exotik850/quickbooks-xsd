@@ -7,6 +7,7 @@ description = "XSD Types for the Quickbooks QBO API generated for Rust"
 repository = "https://github.com/exotik850/quickbooks-xsd"
 license = "MIT"
 readme = "README.md"
+exclude = ["extracted/"]
 
 [dependencies]
 xsd-parser-types = { version = "0.2", features = ["quick-xml"] }
