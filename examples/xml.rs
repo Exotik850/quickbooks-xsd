@@ -11,6 +11,6 @@ fn main() {
     let reader = std::io::BufReader::new(xml);
     let mut reader = quick_xml::reader::IoReader::new(reader).with_error_info();
     // let mut reader = quick_xml::reader::SliceReader::new(xml);
-    let parsed = Box::<InvoiceType>::deserialize(&mut reader).unwrap();
+    let parsed = InvoiceType::deserialize(&mut reader).unwrap();
     println!("{:#?}", parsed);
 }
