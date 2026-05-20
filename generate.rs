@@ -49,7 +49,7 @@ pub(crate) fn build_schema_file() {
     println!("Found XSD files: {}", xsd_files.len());
 
     let config = Config::default()
-        .with_schemas(xsd_files.into_iter().map(Schema::File))
+        .with_schemas(xsd_files.into_iter().map(Schema::File)) //TODO: Dedupe imported schemas
         .with_generator_flags(
             GeneratorFlags::all()
                 ^ GeneratorFlags::ANY_TYPE_SUPPORT
@@ -65,11 +65,14 @@ pub(crate) fn build_schema_file() {
         .with_parser_flags(ParserFlags::all())
         .with_optimizer_flags(
             OptimizerFlags::all()
-                // ^ OptimizerFlags::FLATTEN_COMPLEX_TYPES
+
+            // TODO: This makes larger structs like `InvoiceType` easier to read / handle,
+            // but having it enabled also causes stack overflows during deserialization because of the 
+            // large number of fields. upstream issue?
+            // ^ OptimizerFlags::FLATTEN_COMPLEX_TYPES 
+            
                 ^ OptimizerFlags::REPLACE_XS_ANY_TYPE_WITH_ANY_ELEMENT,
         )
-        // .with_derive(["serde::Serialize", "serde::Deserialize", "Debug"])
-        // .with_serde_quick_xml()
         .with_quick_xml();
     let code = xsd_parser::generate(config).expect("Could not generate schemas");
     let code = code.to_string();
