@@ -1,19 +1,23 @@
 [package]
 name = "quickbooks-xsd"
-version = "0.75.0"
+version = "3.75.0"
 edition = "2024"
+authors = ["@Exotik850"]
+description = "XSD Types for the Quickbooks QBO API generated for Rust"
+repository = "https://github.com/exotik850/quickbooks-xsd"
+license = "MIT"
+readme = "README.md"
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
 xsd-parser-types = { version = "0.2", features = ["quick-xml"] }
 
 [build-dependencies]
-zip = "8.6"
-ureq = "3.3"
-xsd-parser = { version = "1.5", features = ["serde"] }
+zip = {version = "8.6", optional = true}
+ureq = {version = "3.3", optional = true}
+xsd-parser = { version = "1.5", features = ["serde"], optional = true }
 
 [features]
-generate = []
+generate = ["zip", "ureq", "xsd-parser"]
 
 [[example]]
 name = "xml"
