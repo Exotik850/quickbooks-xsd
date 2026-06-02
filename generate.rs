@@ -6,9 +6,9 @@ use std::{
 use xsd_parser::{
     Config,
     config::{
-        GeneratorFlags, InterpreterFlags, OptimizerFlags, ParserFlags, Schema, SerdeXmlRsVersion,
+        GeneratorFlags, InterpreterFlags, OptimizerFlags, ParserFlags, Schema,
     },
-    models::ExplicitNaming,
+    models::ExplicitNaming, pipeline::renderer::{ContentHelpersRenderStep},
 };
 
 const LATEST_ZIP_URL: &str =
@@ -16,7 +16,7 @@ const LATEST_ZIP_URL: &str =
 const LATEST_VERSION: &str = "v3-minor-version-75";
 
 pub(crate) fn build_schema_file() {
-    let out_dir: PathBuf = std::env::var("CARGO_MANIFEST_DIR").unwrap().into();
+    let out_dir: PathBuf = std::env::var("OUT_DIR").unwrap().into();
 
     // download the zip and extract it to a temporary directory
     let response = ureq::get(LATEST_ZIP_URL)
@@ -62,6 +62,7 @@ pub(crate) fn build_schema_file() {
                 ^ InterpreterFlags::WITH_XS_ANY_TYPE
                 ^ InterpreterFlags::WITH_XS_ANY_SIMPLE_TYPE,
         )
+        .with_render_step(ContentHelpersRenderStep)
         .with_parser_flags(ParserFlags::all())
         .with_optimizer_flags(
             OptimizerFlags::all()
@@ -71,13 +72,14 @@ pub(crate) fn build_schema_file() {
             // large number of fields. upstream issue?
             // ^ OptimizerFlags::FLATTEN_COMPLEX_TYPES 
             
-                ^ OptimizerFlags::REPLACE_XS_ANY_TYPE_WITH_ANY_ELEMENT,
+            ^ OptimizerFlags::REPLACE_XS_ANY_TYPE_WITH_ANY_ELEMENT,
         )
+        .with_derive(["Clone", "Debug"])
         .with_quick_xml();
     let code = xsd_parser::generate(config).expect("Could not generate schemas");
     let code = code.to_string();
     let code = rustfmt_pretty_print(code).expect("Could not format generated code");
-    std::fs::write(out_dir.join("src/schemas.rs"), code)
+    std::fs::write(out_dir.join("schemas.rs"), code)
         .expect("Could not write generated code to file");
 }
 

@@ -10,12 +10,14 @@ readme = "README.md"
 exclude = ["extracted/"]
 
 [dependencies]
-xsd-parser-types = { version = "0.2", features = ["quick-xml"] }
+xsd-parser-types = { version = "0.2", features = [
+  "quick-xml",
+], path = "../xsd-parser/xsd-parser-types" }
 
 [build-dependencies]
-zip = {version = "8.6", optional = true}
-ureq = {version = "3.3", optional = true}
-xsd-parser = { version = "1.5", features = ["serde"], optional = true }
+zip = { version = "8.6", optional = true }
+ureq = { version = "3.3", optional = true }
+xsd-parser = { optional = true, path = "../xsd-parser/xsd-parser" }
 
 [features]
 generate = ["zip", "ureq", "xsd-parser"]
